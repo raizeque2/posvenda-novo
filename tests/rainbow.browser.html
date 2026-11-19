@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rainbow · QA</title>
+<body><div id="root"></div><script type="module">
+import React, { useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { RainbowButton } from '../src/components/ui/rainbow-button.tsx'
+import '../src/index.css'
+const h=React.createElement
+function QA(){
+ const [seen,setSeen]=useState(false),[dark,setDark]=useState(false)
+ function theme(){document.documentElement.dataset.theme=dark?'light':'dark';setDark(!dark)}
+ return h('main',{style:{padding:40,display:'grid',gap:24,maxWidth:500}},
+  h('h1',null,'Botões importantes'),h(RainbowButton,{onClick:()=>setSeen(true),animated:!seen,className:'sidebar-news'},'Novidades',!seen&&h('i',{className:'news-dot'})),
+  h('p',{role:'status'},seen?'Visto: efeito removido.':'Novo: efeito ativo.'),
+  h(RainbowButton,null,'Confirmar alteração'),h(RainbowButton,{disabled:true},'Salvando…'),h('button',{onClick:theme},'Alternar tema'))
+}
+createRoot(document.getElementById('root')).render(h(QA))
+</script></body></html>

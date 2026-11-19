@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chaves salvas · QA</title>
+<body><div id="root"></div><script type="module">
+import React, { useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import ConnectionsDialog from '../src/assistant/ConnectionsDialog.jsx'
+import '../src/index.css'
+const h = React.createElement
+// Fictional metadata only; this fixture never stores credentials or calls a provider.
+function Fixture() {
+  const [open, setOpen] = useState(true), [consent, setConsent] = useState(false), [choice, setChoice] = useState('gemini')
+  const [state, setState] = useState({ available: true, savingSupported: true, connected: true, activeKeyId: 'qa-personal', savedKeys: [{ id: 'qa-personal', name: 'Pessoal' }, { id: 'qa-work', name: 'Trabalho' }] })
+  async function manage(action, data) {
+    setState(current => ({ ...current, savedKeys: action === 'delete' ? current.savedKeys.filter(entry => entry.id !== data.id) : current.savedKeys.map(entry => entry.id === data.id ? { ...entry, name: data.name } : entry), connected: action === 'delete' && current.activeKeyId === data.id ? false : current.connected, activeKeyId: action === 'delete' && current.activeKeyId === data.id ? null : current.activeKeyId }))
+    return true
+  }
+  return h(React.Fragment, null, h('p', { style: { padding: 24 } }, 'QA isolado · dados fictícios · nenhuma chamada externa'), h('button', { onClick: () => setOpen(true) }, 'Abrir conexões'), h('button', { onClick: () => document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark') }, 'Alternar tema'), h(ConnectionsDialog, {
+    open, onOpenChange: setOpen, choice, onChoiceChange: setChoice, consent, onConsentChange: setConsent, preview: true, localGemini: state,
+    onLocalConnect: async data => { setState(current => ({ ...current, connected: true, activeKeyId: data.savedKeyId || 'qa-added', savedKeys: data.save ? [...current.savedKeys, { id: 'qa-added', name: data.name }] : current.savedKeys })); return true },
+    onLocalDisconnect: () => setState(current => ({ ...current, connected: false, activeKeyId: null })), onLocalManage: manage, onConfirm: () => setOpen(false),
+  }))
+}
+createRoot(document.getElementById('root')).render(h(Fixture))
+</script></body></html>

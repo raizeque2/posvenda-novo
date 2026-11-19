@@ -1,0 +1,5 @@
+/* Abertura do app (EntradaApp.jsx): tela branca com o logo no centro. */
+.entrada-app { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; background: #ffffff; transition: opacity .38s ease; }
+.entrada-app.is-saindo { opacity: 0; pointer-events: none; }
+.entrada-app-vidro { width: min(100vw, 640px); height: min(100dvh, 640px); background: #ffffff; }
+.entrada-app-estatico { width: 96px; height: 96px; border-radius: 22px; }

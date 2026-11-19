@@ -1,0 +1,6 @@
+const { initializeApp, applicationDefault } = require('firebase-admin/app')
+const { getFirestore } = require('firebase-admin/firestore')
+const ts = Number(process.argv[2])
+if (!Number.isSafeInteger(ts) || ts <= 0) throw Error('Informe o timestamp do build em milissegundos.')
+initializeApp({ credential: applicationDefault(), projectId: 'posvenda-bi' })
+getFirestore().doc('config/appVersion').set({ ts }).then(() => console.log('Versão atualizada: ' + ts)).catch(() => { console.error('Falha no aviso de versão. Verifique ADC.'); process.exitCode = 1 })

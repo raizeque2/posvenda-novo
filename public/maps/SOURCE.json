@@ -1,0 +1,8 @@
+{
+  "source": "IBGE - API de Malhas e Localidades",
+  "documentation": "https://servicodados.ibge.gov.br/api/docs/malhas?versao=3",
+  "geometry": "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=municipio&qualidade=minima&formato=application/vnd.geo%2Bjson",
+  "names": "https://servicodados.ibge.gov.br/api/v1/localidades/municipios",
+  "retrieved": "2026-10-08",
+  "processing": "Malha mínima original separada por UF; nomes associados pelo código IBGE. brasil-silhueta.json é derivado dessas mesmas malhas por scripts/build-brasil-outline.mjs (rasterização + contorno simplificado), para o fundo do mapa de calor."
+}

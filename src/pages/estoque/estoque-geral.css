@@ -1,0 +1,53 @@
+/* Estoque · Visão geral — mesma organização da página de Canais. */
+.eg { display: grid; gap: 16px; }
+.eg-inds { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px; }
+.eg-ind { display: grid; gap: 4px; align-content: start; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg2); }
+.eg-ind-icone { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 8px; border-radius: 10px; background: var(--bg3); color: var(--text2); }
+.eg-ind-icone.is-red { background: var(--red-bg); color: var(--red-critical); }
+.eg-ind-icone.is-amber { background: var(--amber-bg); color: var(--amber); }
+.eg-ind-icone.is-green { background: var(--green-bg); color: var(--green); }
+.eg-ind strong { font-size: 22px; font-weight: 600; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.eg-ind > span:not(.eg-ind-icone) { color: var(--text2); font-size: 14px; }
+.eg-ind small { color: var(--text3); font-size: 12px; }
+
+.eg-saude, .eg-card { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg2); min-width: 0; }
+.eg-saude h2, .eg-card h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.eg-saude p, .eg-card header p { margin: 2px 0 0; color: var(--text3); font-size: 13px; }
+.eg-pilha { display: flex; gap: 3px; height: 16px; border-radius: 999px; overflow: hidden; background: var(--bg3); }
+.eg-pilha i { display: block; min-width: 4px; }
+.eg-pilha-mini { height: 8px; }
+.eg-curvas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 8px 16px; margin: 0; padding: 0; list-style: none; }
+.eg-curvas li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.eg-curvas .eg-ponto { margin-top: 4px; }
+.eg-ponto { width: 10px; height: 10px; border-radius: 3px; }
+.eg-curvas strong { display: block; font-size: 14px; }
+.eg-curvas small { color: var(--text3); font-size: 12px; }
+.eg-curva-num { grid-column: 2; }
+.eg-curva-num b { display: block; font-size: 14px; font-variant-numeric: tabular-nums; }
+
+.eg-secao { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
+.eg-lojas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; }
+.eg-loja { display: grid; gap: 10px; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg2); }
+.eg-loja header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.eg-loja header strong { font-size: 15px; }
+.eg-loja header span { font-size: 12px; font-weight: 600; }
+.eg-loja > b { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.eg-loja dl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
+.eg-loja dt { color: var(--text3); font-size: 12px; }
+.eg-loja dd { margin: 0; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.eg-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; align-items: stretch; }
+.eg-card { align-content: start; }
+.eg-card header { display: flex; align-items: center; gap: 12px; }
+.eg-card-icone { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--bg3); color: var(--text2); }
+.eg-lista { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.eg-lista li { display: grid; gap: 6px; }
+.eg-lista li > div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: baseline; font-size: 14px; }
+.eg-lista span[title] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+.eg-lista b { font-variant-numeric: tabular-nums; }
+.eg-lista em { min-width: 44px; color: var(--text3); font-style: normal; font-size: 12px; text-align: right; }
+.eg-barra { display: block; height: 6px; border-radius: 999px; background: var(--bg3); overflow: hidden; }
+.eg-barra i { display: block; height: 100%; border-radius: inherit; }
+.eg-vazio { margin: 0; color: var(--text3); font-size: 14px; }
+.eg-grafico { height: 240px; min-width: 0; }
+@media (max-width: 768px) { .eg-ind strong { font-size: 20px; } .eg-grafico { height: 220px; } }

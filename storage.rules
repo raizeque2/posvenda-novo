@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isActive() {
+      return request.auth != null
+        && firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data.get('ativo', true) == true
+        && firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data.role in ['admin', 'coordenador', 'supervisor', 'operacional'];
+    }
+
+    function isAdmin() {
+      return isActive()
+        && firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data.role == 'admin';
+    }
+
+
+    match /dados/{allPaths=**} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin() && request.resource.size <= 15000000 && request.resource.contentType == 'application/json';
+      allow delete: if isAdmin();
+    }
+
+    match /Dados/{allPaths=**} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin() && request.resource.size <= 15000000 && request.resource.contentType == 'application/json';
+      allow delete: if isAdmin();
+    }
+
+    match /obsoleto/{allPaths=**} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin() && request.resource.size <= 15000000 && request.resource.contentType == 'application/json';
+      allow delete: if isAdmin();
+    }
+  }
+}

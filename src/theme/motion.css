@@ -1,0 +1,25 @@
+:root{--motion-fast:140ms;--motion-base:220ms;--motion-ease:cubic-bezier(.22,1,.36,1)}
+/* fill "backwards": terminada a animação, o contêiner não fica com transform ativo. Com "both" o Chrome mantinha o .page-transition como bloco de referência e todo popup position:fixed dentro da página abria deslocado (preso à página, não à tela). */
+.page-transition{min-width:0;animation:page-arrive 260ms var(--motion-ease) backwards}
+@keyframes page-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.btn,.prompt-send,.assistant-icon-action,.connection-provider,.chat-provider-select{transition:background-color var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-fast),transform var(--motion-fast) var(--motion-ease)}
+:is(.btn,.prompt-send,.assistant-icon-action,.connection-provider):active:not(:disabled){transform:translateY(1px) scale(.985)}
+.sidebar .nav-item{transition:background-color var(--motion-base),color var(--motion-fast)}
+.sidebar .nav-item svg,.sidebar-news svg{transition:transform var(--motion-base) var(--motion-ease)}
+.home-daily-values :is(a,button),.bi-kpi{transition:background-color var(--motion-base),border-color var(--motion-base),box-shadow var(--motion-base),transform var(--motion-base) var(--motion-ease)}
+.home-content>section,.home-content>.home-news{animation:surface-arrive 340ms var(--motion-ease) both}.home-content>section:nth-child(2){animation-delay:35ms}.home-content>section:nth-child(3){animation-delay:65ms}.home-content>section:nth-child(4){animation-delay:90ms}
+@keyframes surface-arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bi-kpis>.bi-kpi{animation:surface-arrive 320ms var(--motion-ease) backwards}.bi-kpis>.bi-kpi:nth-child(2){animation-delay:25ms}.bi-kpis>.bi-kpi:nth-child(3){animation-delay:50ms}.bi-kpis>.bi-kpi:nth-child(4){animation-delay:75ms}.bi-kpis>.bi-kpi:nth-child(5){animation-delay:100ms}.bi-kpis>.bi-kpi:nth-child(6){animation-delay:125ms}
+.bi-kpi-goal progress::-webkit-progress-value{transition:width 400ms var(--motion-ease),background-color var(--motion-base)}
+.bi-kpi-goal progress::-moz-progress-bar{transition:background-color var(--motion-base)}
+.app-dialog-overlay[data-state=open]{animation:dialog-arrive 160ms ease-out}.app-dialog-overlay[data-state=closed]{animation:dialog-leave 130ms ease-in}
+.app-dialog-content[data-state=open]{animation:dialog-arrive 190ms var(--motion-ease)}.app-dialog-content[data-state=closed]{animation:dialog-leave 130ms ease-in}
+@keyframes dialog-arrive{from{opacity:0}to{opacity:1}}@keyframes dialog-leave{to{opacity:0}}
+.chat-message-row{animation:message-arrive 220ms var(--motion-ease) both}@keyframes message-arrive{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.assistant-input{transition:border-color var(--motion-base),box-shadow var(--motion-base),background-color var(--motion-base)}
+.page-loading{padding:28px 32px;min-height:420px}.page-loading-full{min-height:100dvh;background:var(--bg)}.skeleton{position:relative;overflow:hidden;background:var(--bg3);border-radius:var(--radius-lg)}.skeleton::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--text2) 9%,transparent),transparent);animation:skeleton-sweep 1.6s ease-in-out infinite}.skeleton-title{height:22px;width:180px;margin-bottom:24px}.skeleton-toolbar{height:48px;margin-bottom:22px}.skeleton-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}.skeleton-card{height:150px}.skeleton-panel{height:220px}@keyframes skeleton-sweep{to{transform:translateX(100%)}}
+.ui-spinner{display:inline-block;flex-shrink:0;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:ui-spin .8s linear infinite}@keyframes ui-spin{to{transform:rotate(360deg)}}
+@media(hover:hover) and (pointer:fine){.sidebar .nav-item:hover svg,.sidebar-news:hover svg{transform:translateY(-1px)}.home-daily-values :is(a,button):hover,.bi-kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}.prompt-send:not(:disabled):hover{transform:translateY(-1px)}}
+@media(max-width:768px){.page-loading{padding:20px 16px}.skeleton-cards{gap:10px}.skeleton-card{height:100px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.page-transition,.home-content>section,.home-content>.home-news,.bi-kpis>.bi-kpi,.chat-message-row{animation:none}.skeleton::after{display:none}:is(.btn,.prompt-send,.assistant-icon-action,.connection-provider,.bi-kpi,.service-card,.home-daily-values a,.home-daily-values button):is(:hover,:active),.sidebar .nav-item:hover svg,.sidebar-news:hover svg{transform:none!important}}
+@media print{.page-transition{animation:none;transform:none}.page-loading{display:none}}

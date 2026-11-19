@@ -1,0 +1,147 @@
+/* Casca do app: rolagem, topbar translúcida e aviso de verificação.
+   Carregado depois de index.css e pv/tema.css. */
+
+/* Desktop: a altura do layout é a da janela e quem rola é o <main>. Antes o
+   layout crescia com o conteúdo, a janela rolava e o <main> (scroll container)
+   nunca rolava: a topbar sticky não grudava e o reset de rolagem não fazia nada. */
+html body .layout.layout-workspace { height: 100dvh; min-height: 0; overflow: hidden; }
+html body .full-preview .layout.layout-workspace { height: calc(100dvh - 44px); }
+html body .layout-workspace > .main { height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scroll-padding-top: 96px; }
+html:root[data-theme] body .layout aside.sidebar { height: 100% !important; }
+
+/* Topbar translúcida com blur: o conteúdo passa por trás, borrado, sem perder contraste. */
+html .workspace-tools {
+  position: sticky !important; top: 12px; z-index: 40;
+  background: color-mix(in srgb, var(--bg2) 72%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--border2) 70%, transparent) !important;
+  -webkit-backdrop-filter: saturate(1.8) blur(16px) !important; backdrop-filter: saturate(1.8) blur(16px) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 8px 24px rgba(15, 23, 42, .06) !important;
+}
+html:root[data-theme=dark] .workspace-tools { box-shadow: 0 8px 24px rgba(0, 0, 0, .35) !important; }
+/* Ao rolar para baixo (WorkspaceTools → .is-compacta) a barra encolhe para a direita e
+   a busca vira só a lupa. margin-left:auto + max-width numérico deixa a largura animar. */
+html .workspace-tools { --wt-m: 20px; margin-left: auto !important; max-width: calc(100% - 2 * var(--wt-m)); transition: max-width .35s cubic-bezier(.2, .8, .2, 1), padding .35s, gap .35s; }
+html .workspace-tools > .action-search { transition: flex-basis .35s, max-width .35s, opacity .2s; }
+html .workspace-tools.is-compacta { max-width: 184px; gap: 4px !important; padding-left: 8px !important; padding-right: 8px !important; }
+html .workspace-tools.is-compacta > .action-search { flex: 0 0 40px !important; max-width: 40px !important; overflow: hidden; cursor: pointer; }
+html .workspace-tools.is-compacta > .action-search input, html .workspace-tools.is-compacta > .action-search .action-search-field > :not(svg) { opacity: 0; pointer-events: none; }
+/* O botão da sidebar continua; somem só título e data. */
+html .workspace-tools.is-compacta :is(.workspace-page-title, .workspace-date) { display: none; }
+html .workspace-tools.is-compacta .workspace-tools-end { gap: 2px !important; }
+@media (prefers-reduced-motion: reduce) { html .workspace-tools, html .workspace-tools > .action-search { transition: none; } }
+/* Só a topbar (busca) fica fixa. A barra de filtros das páginas (ex.: Faturamento) rola com o
+   conteúdo: duas barras fixas, uma sobre a outra, poluíam a tela (13/11/2026). */
+html body .main .dash-top-bar { position: relative !important; top: auto !important; z-index: 30; }
+/* Faturamento (WorkspaceTools → .is-junta): uma barra só. A topbar não ocupa linha própria
+   (margem negativa) e fica, só com os ícones, no canto direito da barra de filtros, que é a
+   única fixa. Com a busca aberta ela volta a ter fundo e cobre a barra enquanto se digita. */
+@media (min-width: 769px) {
+  html .workspace-tools.is-junta { margin-bottom: -64px !important; min-height: 64px; z-index: 41; }
+  html .workspace-tools.is-junta.is-compacta {
+    background: transparent !important; border-color: transparent !important; box-shadow: none !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  }
+  html .workspace-tools.is-junta:not(.is-compacta) { background: var(--bg2) !important; }
+  html .workspace-tools.is-junta.is-compacta::before { content: ''; position: absolute; left: 0; top: 16px; bottom: 16px; width: 1px; background: var(--border); }
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar { position: sticky !important; top: 12px !important; z-index: 40; padding-right: 204px !important; min-height: 64px; }
+  /* Uma linha só: sem espaço, o resumo de dias encolhe (e some) antes de empurrar o Salvar para baixo. */
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar { flex-wrap: nowrap !important; }
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar .dash-right-tools { min-width: 0; flex: 0 1 auto; }
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar .dash-day-summary { min-width: 0; flex: 0 1 auto; overflow: hidden; white-space: nowrap; }
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar :is(.dash-bi-salvar, .dash-icon-action) { flex: none; }
+  html:has(.workspace-tools.is-junta) body .main .dash-top-bar .dash-day-summary > * { flex: none; }
+  /* Telas mais estreitas: "Personalizar" vira só o ícone (o texto continua para leitor de tela) e
+     somem o resumo de dias e os atalhos de altura/impressão, para o Salvar não invadir os ícones. */
+  @media (max-width: 1320px) { html:has(.workspace-tools.is-junta) body .main .dash-top-bar .dash-bi-slot > .bi-button { font-size: 0 !important; gap: 0 !important; width: 36px; min-width: 36px; padding: 0 !important; justify-content: center; } }
+  @media (max-width: 1200px) { html:has(.workspace-tools.is-junta) body .main .dash-top-bar :is(.dash-day-summary, .dash-icon-action) { display: none; } }
+  /* Tablet com a sidebar aberta: não cabe numa linha; o Salvar desce para a segunda, abaixo dos ícones. */
+  @media (max-width: 1000px) { html:has(.workspace-tools.is-junta) body .main .dash-top-bar { flex-wrap: wrap !important; } }
+  /* A barra de filtros começa na mesma altura dos ícones. */
+  html:has(.workspace-tools.is-junta) body .main .page:has(> .dash-top-bar) { padding-top: 0 !important; }
+}
+/* "Visão geral" vira um botão seletor só com ícone enquanto as barras estão juntas. */
+/* "Visão geral" é sempre um botão seletor só com ícone, no mesmo formato dos botões vizinhos
+   (Estado, Lojas, Equipe): 34×36, raio 8, borda do tema. O nome da visão fica no title/aria. */
+html body .dash-top-bar .dash-bi-slot > select {
+  width: 34px !important; min-width: 34px; height: 36px; min-height: 36px; padding: 0; color: transparent; text-indent: -999px; cursor: pointer;
+  border: 1px solid var(--border) !important; border-radius: 8px !important; box-shadow: none !important;
+  -webkit-appearance: none; appearance: none;
+  background: var(--bg2) no-repeat center / 14px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a0a0a' stroke-width='1.8' stroke-linecap='round'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5'/%3E%3C/svg%3E") !important;
+}
+html[data-theme=dark] body .dash-top-bar .dash-bi-slot > select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e4e4e7' stroke-width='1.8' stroke-linecap='round'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5'/%3E%3C/svg%3E") !important;
+}
+/* Popup aberto (App.jsx → html.trava-rolagem): a página atrás fica parada. */
+html.trava-rolagem, html.trava-rolagem body { overflow: hidden !important; overscroll-behavior: none; }
+html.trava-rolagem body .layout-workspace > .main { overflow: hidden !important; }
+.bi-overlay, .bi-drill, .ui-modal-fundo, .onb-fundo, .bb-fundo { overscroll-behavior: contain; }
+/* Sem suporte a backdrop-filter: fundo opaco para manter a leitura. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { html .workspace-tools { background: var(--bg2) !important; } }
+@media (prefers-reduced-transparency: reduce) { html .workspace-tools, .bottom-bar { background: var(--bg2) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } }
+
+/* Grade de indicadores que se ajusta à quantidade de cards: a última linha
+   estica em vez de deixar buracos (ex.: 7 cards numa grade de 4 colunas). */
+html .kpi-grid-fluida { display: flex !important; flex-wrap: wrap; gap: 12px; }
+html .kpi-grid-fluida > * { flex: 1 1 min(100%, 220px); min-width: 0; }
+/* Dashboard: os cards de canal (quantidade varia por perfil) e o pódio seguem a mesma regra. */
+html body .bi-kpis { display: flex !important; flex-wrap: wrap; }
+html body .bi-kpis > * { flex: 1 1 min(100%, 230px); min-width: 0; }
+/* Pódio: sempre os 3 lado a lado (antes quebrava em 2 + 1). */
+html body .bi-podio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 600px) { html body .bi-kpis > * { flex-basis: calc(50% - 6px); } }
+@media (max-width: 390px) { html body .bi-kpis > * { flex-basis: 100%; } }
+
+.aviso-verificacao { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin: 12px 20px 0; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent); border-radius: 12px; background: var(--amber-bg); color: var(--text); font-size: 14px; }
+.aviso-verificacao a { color: var(--text); font-weight: 600; }
+
+@media (max-width: 768px) {
+  /* Celular: a janela rola (barra do navegador recolhe, puxar para atualizar funciona). */
+  html body .layout.layout-workspace, html body .full-preview .layout.layout-workspace { height: auto; min-height: 100dvh; overflow: visible; }
+  html body .layout-workspace > .main { height: auto; overflow: visible; }
+  html .workspace-tools { --wt-m: 12px; top: calc(8px + env(safe-area-inset-top)); margin: 8px 12px 0 auto !important; padding: 6px 8px 6px 12px !important; min-height: 56px; border-radius: 16px !important; flex-wrap: nowrap !important; gap: 6px !important; }
+  /* Uma linha só: a busca encolhe e as ações ficam à direita. */
+  /* Celular: não cabe tudo numa linha; os filtros ficam logo abaixo da topbar. */
+  html body .main .dash-top-bar, html:has(.workspace-tools.is-compacta) body .main .dash-top-bar { top: calc(72px + env(safe-area-inset-top)); padding-right: 12px !important; min-height: 0; }
+  html .workspace-tools:not(.is-compacta) > .action-search { flex: 1 1 auto !important; min-width: 0 !important; }
+  /* Topbar do celular: [menu][lupa] ............ [ações][avatar], sempre em largura cheia. */
+  html .workspace-tools, html .workspace-tools.is-compacta { max-width: none; margin-left: 12px !important; justify-content: flex-start !important; padding-left: 6px !important; }
+  html .workspace-tools .workspace-tools-end { margin-left: auto; }
+  html .workspace-menu { display: grid; place-items: center; flex: none; border: 0; border-radius: 10px; background: transparent; color: var(--text); cursor: pointer; }
+  html .workspace-menu:active { background: var(--bg3); }
+  html .workspace-tools.is-compacta > .action-search .action-search-field { border-color: transparent !important; background: transparent !important; }
+  html .workspace-tools .action-search-field { padding-left: 0 !important; padding-right: 0 !important; }
+  html .workspace-tools .action-search-field input { min-width: 0; text-overflow: ellipsis; }
+  html .workspace-tools .workspace-date { display: none; }
+  html .workspace-tools-end { gap: 2px !important; }
+  html .workspace-tools .topo-botao, html .workspace-tools .topo-avatar { min-width: 40px; min-height: 40px; }
+  .aviso-verificacao { margin: 10px 12px 0; }
+  /* Abas internas das páginas: uma linha com rolagem lateral em vez de empilhar. */
+  html .main .tab-nav { display: flex !important; flex-wrap: nowrap !important; flex-direction: row !important; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  html .main .tab-nav::-webkit-scrollbar { display: none; }
+  html .main .tab-nav .tab-btn { flex: none; min-height: 40px; }
+  /* Áreas de toque: ícones com 40px e controles pequenos com 36px. */
+  html .workspace-tools button { min-width: 40px; min-height: 40px; }
+  html .main button[aria-label]:not(.bb-item):not(.perm-icone-btn) { min-width: 36px; min-height: 36px; }
+  html .main :is(.btn-xs, .btn-sm, .analysis-sort) { min-height: 36px; }
+  html .main .kpi-info-btn { position: relative; }
+  html .main .kpi-info-btn::after { content: ''; position: absolute; inset: -12px; }
+  html .main table .badge, html .main td button { min-height: 30px; }
+  /* "Meu desempenho" como app: nada antes do topo da própria página (ver Desempenho.jsx). */
+  html.tela-app .workspace-tools, html.tela-app .main .desempenho-abas, html.tela-app .aviso-verificacao { display: none !important; }
+  html.tela-app .main .md { padding-top: calc(12px + env(safe-area-inset-top)); }
+  /* Selo "vendo como" acima da bottom bar. */
+  .pv-ver-como { bottom: calc(var(--bb-respiro, 96px) + 4px) !important; }
+}
+
+/* Controles do BI dentro da barra de filtros do Faturamento (Dashboard.jsx → barra). */
+html body .dash-top-bar .bi-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; }
+html body .dash-top-bar .dash-bi-slot > select { order: -1; width: 150px; min-height: 36px; }
+html body .dash-top-bar .dash-bi-slot > :is(button, details > summary) { min-height: 36px; }
+html body .dash-top-bar .dash-bi-salvar:empty, html body .dash-top-bar .dash-bi-slot:empty { display: none; }
+html body .dash-top-bar .dash-bi-salvar .bi-save-state:empty { display: none; }
+@media (max-width: 768px) { html body .dash-top-bar .dash-bi-slot > select { width: 120px; } html body .dash-top-bar .dash-bi-salvar .bi-save-state { display: none; } }
+
+/* Menus nativos (<select>) seguem o tema: no escuro a lista abria branca com texto claro. */
+html:root[data-theme=dark] select { color-scheme: dark; }
+html:root:not([data-theme=dark]) select { color-scheme: light; }
+html select option { background: var(--bg2); color: var(--text); }

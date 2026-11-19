@@ -1,0 +1,55 @@
+# Dependências — geradas automaticamente com "npm install", não precisam ser versionadas
+node_modules/
+
+# Build de produção — gerado com "npm run build", não precisa ser versionado
+dist/
+
+# Cache interno do Vite
+.vite/
+
+# Variáveis de ambiente — NUNCA versionar, contém senhas e chaves
+.env
+.env.local
+.env.*.local
+
+# Cache do Firebase CLI
+.firebase/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Chaves de serviço Firebase — NUNCA versionar
+serviceAccountKey.json
+*serviceAccount*.json
+
+# Exports de dados reais (colaboradores/metas) — dado sensível de negócio,
+# não código; não deveria ficar em histórico de git (02/09/2026)
+backups/
+
+# Prévia e arquivos temporários
+dist-preview/
+*-update.py
+update-bi.py
+repair-update.py
+.claude/
+_backup_pre_dash_redesign/
+
+.env.*
+!.env.example
+*.pem
+*.p12
+release/
+security-reports/npm-tool.json
+
+# Capturas e imagens soltas da raiz (podem ter dados reais)
+/screencapture-*.png
+/popup.png
+/exemplo de mapa*.png
+
+# Ferramentas de agentes (skills locais)
+.agents/

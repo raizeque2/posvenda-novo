@@ -1,0 +1,9 @@
+<!doctype html><html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Visão do setor · dados fictícios</title><body><div id="root"></div><script type="module">
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { SnapshotView } from '../src/pages/Snapshot.jsx'
+import '../src/index.css'
+import '../src/theme/operations.css'
+const data = { estado: 'AL', tipo: 'pecas', mes: '10/2026', ts: Date.now(), dataRef: '2026-10-15T15:00:00Z', dataAtualizacao: '15/10/2026, 12:00', kpis: [{ label: 'Varejo', real: 40000, meta: 100000, proj: 120000, hoje: 2000 }], canais: { VAREJO: [{ nome: 'ANA COSTA · QA', lojas: ['ARA'], real: 30000, meta: 75000, proj: 90000, margem: .3, hoje: 1500, tm: 200 }, { nome: 'BRUNO LIMA · QA', lojas: ['ARA'], real: 10000, meta: 25000, proj: 30000, margem: .25, hoje: 500, tm: 180 }] } }
+createRoot(document.getElementById('root')).render(React.createElement(React.Fragment, null, React.createElement('p', { style: { padding: 12, margin: 0 } }, 'Demonstração local · dados fictícios · nenhum link real foi criado ou alterado'), React.createElement(SnapshotView, { dados: data, estado: 'AL', tipo: 'pecas' })))
+</script></body></html>

@@ -1,0 +1,3 @@
+/* Equivalente às classes Tailwind do componente original (o projeto não usa Tailwind). */
+.glass-reveal { position: relative; isolation: isolate; cursor: pointer; overflow: hidden; user-select: none; -webkit-user-select: none; }
+.glass-reveal-fallback { position: absolute; inset: 0; margin: auto; display: block; }

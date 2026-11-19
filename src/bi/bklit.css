@@ -1,0 +1,156 @@
+.bklit-chart {
+  height: 100%;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  --chart-background: var(--bg2);
+  --chart-foreground: var(--text);
+  --chart-foreground-muted: var(--text2);
+  --chart-label: var(--text3);
+  --chart-grid: var(--border);
+  --chart-crosshair: #98a2b3;
+  --chart-tooltip-background: var(--bg2);
+  --chart-line-secondary: #8979fe;
+  --background: var(--bg2);
+  --foreground: var(--text);
+  --muted-foreground: var(--text3);
+}
+.bklit-chart .bklit-plot {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.bklit-chart .bklit-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto !important;
+}
+.bklit-chart .bklit-pie .bklit-frame {
+  position: absolute;
+  inset: 0;
+}
+.bklit-chart .relative {
+  position: relative;
+}
+.bklit-chart .absolute {
+  position: absolute;
+}
+.bklit-chart .w-full {
+  width: 100%;
+}
+.bklit-chart .h-full {
+  height: 100%;
+}
+.bklit-chart .overflow-visible {
+  overflow: visible;
+}
+.bklit-chart .pointer-events-none {
+  pointer-events: none;
+}
+.bklit-chart svg {
+  font-family: var(--font);
+}
+.bklit-chart rect:focus-visible {
+  outline: 2px solid var(--honda);
+  outline-offset: -2px;
+}
+.bklit-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px 12px;
+  padding: 9px 4px 3px;
+  font-size: 10px;
+  max-height: 65px;
+  overflow: auto;
+}
+.bklit-legend button,
+.bklit-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: inherit;
+  color: var(--text2);
+  border: 0;
+  background: none;
+  padding: 2px;
+  cursor: pointer;
+}
+.bklit-legend i {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.bklit-tooltip {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 24px #0001;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.bklit-pie-value {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg2);
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.bklit-chart .z-50 {
+  z-index: 50;
+}
+.bklit-accessible {
+  font-size: 10px;
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  z-index: 1;
+  background: var(--bg2);
+}
+.bklit-accessible[open] {
+  max-height: 85%;
+  overflow: auto;
+  box-shadow: 0 3px 20px #0002;
+  padding: 8px;
+}
+.bklit-accessible button {
+  display: block;
+  font: inherit;
+  border: 0;
+  background: var(--bg2);
+  padding: 6px;
+  color: var(--text);
+  cursor: pointer;
+}
+.bklit-chart {
+  position: relative;
+}
+.bklit-legend {
+  padding-bottom: 17px;
+}
+.bklit-chart .bklit-pie svg {
+  display: block;
+  margin: auto;
+}
+.bklit-pie .grid {
+  display: grid;
+  margin-inline: auto;
+}
+.bi-floating-tooltip{position:fixed;z-index:4000;pointer-events:none;max-width:min(320px,calc(100vw - 16px));padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);color:var(--text);box-shadow:0 8px 30px #0002;font:12px/1.5 var(--font);white-space:normal;overflow-wrap:anywhere}
+.bi-floating-tooltip strong{display:block;margin-bottom:5px}
+
+.bklit-legend button>span{min-width:0;overflow:hidden;text-overflow:ellipsis}.bklit-legend button>strong{font-size:10px;white-space:nowrap}.bklit-pie-value{max-width:95%;white-space:normal;overflow-wrap:anywhere}
+
+/* Visual mais limpo (13/11/2026): a legenda da rosca mostra tudo, sem rolagem própria;
+   o espaço reservado para "Ver valores" só aparece quando ele está ligado. */
+.bklit-legend { max-height: none; overflow: visible; padding-bottom: 4px; }

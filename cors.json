@@ -1,0 +1,11 @@
+[
+  {
+    "origin": [
+      "https://posvenda-bi.web.app",
+      "https://posvenda-bi.firebaseapp.com"
+    ],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]

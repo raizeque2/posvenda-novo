@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Estados do chat · QA</title>
+<body><div id="root"></div><script type="module">
+import React, { useRef, useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { MemoryRouter } from 'react-router-dom'
+import ChatModal from '../src/assistant/chat/ChatModal.jsx'
+import { newConversation } from '../src/assistant/conversations.js'
+import '../src/index.css'
+import '../src/pages/home.css'
+// Isolated UI states: no provider credentials or network calls.
+const h = React.createElement
+const table = '## Resultado de teste\n\n| Pessoa | Receita |\n| --- | ---: |\n| Ana | R$ 100,00 |\n| Bruno | R$ 80,00 |\n\n- Dados exclusivos de QA.\n- **Nenhuma consulta externa.**'
+function TestChat() {
+  const [open, setOpen] = useState(true), [provider, setProvider] = useState('local'), [state, setState] = useState('complete'), [prompt, setPrompt] = useState('')
+  const origin = useRef(null)
+  const messages = [{ id: 'question', role: 'user', text: 'Mostre um ranking' }, { id: 'answer', role: 'assistant', provider: 'claude', status: state, text: state === 'error' ? 'Esta falha é apenas uma simulação de QA.' : state === 'empty' ? '' : table }]
+  const chat = { ...newConversation(Date.now(), 'qa'), title: 'Teste de estados', messages }
+  const connections = { local: { state: 'connected', label: 'Local' }, claude: { state: 'connected', label: 'Simulação de QA' }, codex: { state: 'disconnected', label: 'Não conectado' }, openai: { state: 'disconnected', label: 'Não conectado' } }
+  const pickerProps = { providers: [{ id: 'local', name: 'Local', models: [{ id: 'local', name: 'Local' }] }], value: 'local', provider: 'local', onValueChange: () => {}, onConnect: () => {} }
+  return h(React.Fragment, null, h('button', { ref: origin, onClick: () => setOpen(true) }, 'Abrir teste'), h(ChatModal, {
+    open, onOpenChange: setOpen, mobile: innerWidth <= 768, returnFocus: origin, name: 'Bruno', provider, connections, conversations: [chat], activeId: 'qa', messages, busy: state === 'pending', canEdit: false,
+    voice: { canRead: false, phase: 'idle', active: false, levels: [], error: '', toggle: () => {}, keep: () => {}, discard: () => {}, cancelCapture: () => {} }, onConnect: () => {}, onProvider: setProvider, onNew: () => {}, onSelect: () => {}, onRename: () => {}, onDelete: () => {}, onRetry: () => setState('complete'), onEdit: () => {}, onVote: () => {}, onTarget: () => {}, prompt, setPrompt, send: () => setState('complete'), pickerProps,
+  }, h('section', { 'aria-label': 'Controles de teste do chat', style: { display: 'flex', flexWrap: 'wrap', gap: 8, padding: 12 } }, ...['complete', 'pending', 'streaming', 'error', 'empty'].map(value => h('button', { key: value, onClick: () => setState(value), style: { padding: 8 } }, `Estado ${value}`)))))
+}
+createRoot(document.getElementById('root')).render(h(MemoryRouter, null, h(TestChat)))
+</script></body></html>

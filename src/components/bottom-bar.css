@@ -1,0 +1,43 @@
+/* Bottom bar — só no celular (≤768px). O desktop continua com a sidebar. */
+.bottom-bar, .bb-fundo { display: none; }
+@media (max-width: 768px) {
+  :root { --bb-altura: 68px; --bb-respiro: calc(var(--bb-altura) + 24px + env(safe-area-inset-bottom)); }
+  .bottom-bar {
+    position: fixed; left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 60;
+    display: flex; align-items: center; justify-content: space-around; gap: 2px; height: var(--bb-altura); padding: 0 8px;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: color-mix(in srgb, var(--bg2) 82%, transparent); -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .12);
+  }
+  .bb-item { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 52px; padding: 4px 2px; border: 0; background: none; color: var(--text2); text-decoration: none; font: 500 10.5px var(--font); letter-spacing: -.01em; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .bb-icone { display: grid; place-items: center; width: 40px; height: 30px; border-radius: 999px; transition: background-color var(--motion-base, 220ms), color var(--motion-fast, 140ms); }
+  .bb-rotulo { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bb-item.is-ativo { color: var(--honda); font-weight: 600; }
+  .bb-item.is-ativo .bb-icone { background: var(--honda-bg); }
+  .bb-item:focus-visible, .bb-central:focus-visible { outline: 2px solid var(--honda); outline-offset: 2px; border-radius: 14px; }
+  .bb-central { flex: none; display: grid; place-items: center; width: 60px; height: 60px; margin: -26px 2px 0; border: 4px solid var(--bg); border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--honda) 70%, #fff), var(--honda)); box-shadow: 0 8px 22px color-mix(in srgb, var(--honda) 40%, transparent); cursor: pointer; }
+  .bb-central { color: #fff; text-decoration: none; }
+  .bb-central.is-ativo { box-shadow: 0 0 0 3px color-mix(in srgb, var(--honda) 30%, transparent), 0 8px 22px color-mix(in srgb, var(--honda) 40%, transparent); }
+  .bb-lista img { border-radius: 50%; }
+  .bb-central:active { transform: scale(.96); }
+
+  .bb-fundo { display: block; position: fixed; inset: 0; z-index: 70; background: rgba(10, 10, 12, .35); animation: bb-fade 160ms ease-out both; }
+  .bb-folha { position: absolute; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); max-height: min(72dvh, 560px); overflow-y: auto; overscroll-behavior: contain; padding: 10px 10px 12px; border-radius: 22px; background: var(--bg2); box-shadow: 0 -10px 40px rgba(0,0,0,.18); animation: bb-subir 240ms var(--motion-ease, ease) both; }
+  .bb-alca { display: block; width: 40px; height: 4px; margin: 2px auto 10px; border-radius: 4px; background: var(--border2); }
+  .bb-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .bb-lista + .bb-lista { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .bb-lista a, .bb-lista button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 0 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg2); color: var(--text); font: 500 14px var(--font); text-decoration: none; text-align: left; cursor: pointer; }
+  .bb-lista a.is-ativo { border-color: color-mix(in srgb, var(--honda) 35%, transparent); background: var(--honda-bg); color: var(--honda); }
+  .bb-lista a:focus-visible, .bb-lista button:focus-visible { outline: 2px solid var(--honda); outline-offset: 1px; }
+
+  /* Conteúdo nunca fica sob a barra: respiro no fim de cada tela. */
+  .layout-workspace .main { padding-bottom: var(--bb-respiro) !important; }
+  /* A sidebar é gaveta (abre pelo botão da topbar); fechada fica fora da tela. */
+  .layout-workspace .mobile-header { display: none !important; }
+  .layout-workspace .sidebar:not(.sidebar-expanded) { visibility: hidden; }
+  html:root[data-theme] body .full-preview .layout-workspace > aside.sidebar { top: 44px !important; height: calc(100dvh - 44px) !important; }
+  .layout-workspace .sidebar-backdrop { z-index: 199; -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+}
+@keyframes bb-subir { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes bb-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .bb-fundo, .bb-folha { animation: none; } }

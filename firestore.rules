@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function isActive() {
+   return request.auth != null
+    && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+    && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.get('ativo', true) == true
+    && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role in ['admin', 'coordenador', 'supervisor', 'operacional'];
+  }
+  function isAdmin() {
+   return isActive() && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin';
+  }
+  // Personal/financial configs are delivered by lerDadosAutorizados, never raw to other roles.
+  match /config/{id} {
+   allow read: if isAdmin() || (isActive() && id in ['mesesDisponiveis', 'appVersion']);
+   allow write: if isAdmin();
+  }
+  match /bonificacoes/{id} { allow read, write: if isAdmin(); }
+  match /usuarios/{uid}/bi/{id} { allow read, write: if isActive() && request.auth.uid == uid; }
+  match /usuarios/{uid} {
+   allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+   allow write: if isAdmin();
+  }
+  match /configuracoes/{id} {
+   allow read: if isAdmin() || (isActive() && id == 'regrasEstoque');
+   allow write: if isAdmin();
+  }
+  match /snapshots/{id} { allow read, write: if isAdmin(); }
+  // Public registration and possession links are validated only in callable functions.
+  match /solicitacoes/{id} { allow read, delete: if isAdmin(); }
+  // Contas do portal de colaboradores/supervisores: hash de senha, tentativas e
+  // bloqueio vivem só no servidor. O navegador nunca lê nem escreve aqui.
+  match /portalContas/{id} { allow read, write: if false; }
+  // Organograma, pedidos de troca de equipe e auditoria: só pela função gestaoEquipe,
+  // que filtra o que cada perfil vê e confere quem pode aprovar.
+  match /equipe/{id} { allow read, write: if false; }
+  // Fotos de perfil aparecem para os colegas (ranking, organograma); gravação só pela função.
+  match /equipeFotos/{id} { allow read: if isActive(); allow write: if false; }
+  // Respostas do NPS (podem ter CPF): só pelas funções npsPesquisa e npsPainel.
+  match /nps/{id} { allow read, write: if false; }
+  match /biLinks/{id} { allow read, write: if false; }
+  match /assistantProposals/{id} { allow read, write: if false; }
+  match /assistantAudit/{id} { allow read, write: if false; }
+  match /assistantConnections/{id} { allow read, write: if false; }
+  match /assistantLimits/{id} { allow read, write: if false; }
+  match /assistantPersonalLimits/{id} { allow read, write: if false; }
+  match /publicRequestLimits/{id} { allow read, write: if false; } }
+}

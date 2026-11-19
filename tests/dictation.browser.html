@@ -1,0 +1,42 @@
+<!doctype html><html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ditado · teste com fala simulada</title><body><div id="root"></div><script type="module">
+import React, { useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { PromptInput } from '../src/components/ui/ai-chat-input.tsx'
+import { useAssistantVoice } from '../src/assistant/useAssistantVoice.js'
+import '../src/index.css'
+import '../src/theme/operations.css'
+import '../src/pages/home.css'
+let recognizer, stoppedTracks = 0
+class Recognition {
+  constructor() { recognizer = this }
+  start() { queueMicrotask(() => this.onstart?.()) }
+  stop() { this.onend?.() }
+  abort() {}
+}
+window.SpeechRecognition = Recognition
+Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: { getUserMedia: async () => ({ getTracks: () => [{ stop: () => stoppedTracks++ }] }) } })
+window.AudioContext = class {
+  state = 'running'
+  async resume() {}
+  createMediaStreamSource() { return { connect() {} } }
+  createAnalyser() { return { fftSize: 256, getByteTimeDomainData(samples) { samples.forEach((_, i) => { samples[i] = 128 + Math.sin(i * .15 + performance.now() / 130) * 20 * (1 + Math.sin(performance.now() / 400)) }) } } }
+  async close() { this.state = 'closed' }
+}
+function emit(text, final = false) { recognizer?.onresult?.({ resultIndex: 0, results: [Object.assign([{ transcript: text }], { isFinal: final })] }) }
+function Fixture() {
+  const [prompt, setPrompt] = useState('Resumo: '), [sent, setSent] = useState('')
+  const voice = useAssistantVoice({ open: false, pathname: '/', prompt, setPrompt })
+  return React.createElement('main', { style: { maxWidth: 740, margin: '70px auto', padding: 20 } },
+    React.createElement('h1', null, 'Ditado · demonstração com fala simulada'),
+    React.createElement('p', null, 'Este teste não captura áudio real nem envia consultas.'),
+    React.createElement(PromptInput, { value: prompt, onChange: setPrompt, onSubmit: () => { setSent(prompt); setPrompt('') }, voice, modelPicker: { providers: [{ id: 'local', name: 'Local', models: [{ id: 'local', name: 'Local' }] }], value: 'local' } }),
+    React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 20 } },
+      React.createElement('button', { onClick: () => emit('quero ver as vendas') }, 'Fala parcial'),
+      React.createElement('button', { onClick: () => emit('quero ver as vendas deste mês') }, 'Atualizar fala'),
+      React.createElement('button', { onClick: () => emit('quero ver as vendas deste mês.', true) }, 'Confirmar fala'),
+      React.createElement('button', { onClick: () => recognizer?.onerror?.({ error: 'not-allowed' }) }, 'Simular permissão negada')),
+    React.createElement('p', { role: 'status' }, `Estado: ${voice.phase}`),
+    React.createElement('p', null, `Mensagem enviada: ${sent || 'nenhuma'}`))
+}
+createRoot(document.getElementById('root')).render(React.createElement(Fixture))
+</script></body></html>

@@ -1,0 +1,7 @@
+.prompt-dictation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 10px;padding:9px 0;border-top:1px solid var(--border2)}
+.prompt-dictation-status{display:flex;align-items:center;gap:12px;min-width:0;color:var(--text2);font-size:11px}.prompt-dictation-status>[role=status]{white-space:nowrap}
+.prompt-voice-wave{display:flex;align-items:center;gap:3px;height:28px;color:var(--honda);overflow:hidden}.prompt-voice-wave i{display:block;width:3px;flex-shrink:0;border-radius:4px;background:currentColor;transition:height 80ms linear}
+.assistant-input .prompt-dictation-actions{display:flex;align-items:center;gap:6px}.assistant-input .prompt-dictation-actions button{min-width:36px;min-height:36px;justify-content:center}.assistant-input .assistant-icon-action.is-recording{background:color-mix(in srgb,var(--honda) 12%,var(--bg2));color:var(--honda)}
+.assistant-input .prompt-voice-notice,.assistant-input .prompt-voice-error{margin:0 0 10px;font-size:10px;line-height:1.5;color:var(--text2)}.assistant-input .prompt-voice-error{color:var(--red)}
+@media(max-width:600px){.prompt-dictation{gap:8px}.prompt-dictation-status{gap:8px}.prompt-voice-wave{gap:2px}.prompt-voice-wave i{width:2px}.assistant-input .prompt-dictation-actions button{min-width:44px;min-height:44px}.assistant-input .prompt-dictation-actions button span{display:none}}
+@media(prefers-reduced-motion:reduce){.prompt-voice-wave i{transition:none}}

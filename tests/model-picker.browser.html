@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste do seletor de modelos</title>
+<body><div id="root"></div>
+<script type="module">
+import React, { useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ModelPicker } from '../src/components/ui/model-picker.tsx'
+import '../src/index.css'
+import '../src/pages/home.css'
+// Open /tests/model-picker.browser.html with Vite running. QA data never enters the assistant.
+const providers = [{ id: 'openai', name: 'OpenAI', models: [
+  { id: 'qa-reasoning', name: 'Modelo de teste com raciocínio', description: 'Teste de seleção e esforço', thinking: ['low', 'medium', 'high', 'max'], defaultThinking: 'medium', capabilities: ['reasoning', 'image'] },
+  { id: 'qa-fast', name: 'Modelo de teste rápido', description: 'Teste sem ajuste de esforço' },
+  { id: 'qa-hidden', name: 'Modelo indisponível', available: false },
+] }, { id: 'claude', name: 'Claude', models: [
+  { id: 'qa-claude', name: 'Outro modelo de teste', thinking: ['low', 'high'], defaultThinking: 'high' },
+] }]
+function TestPicker() {
+  const [selection, setSelection] = useState({ value: 'qa-reasoning', provider: 'openai', thinking: 'medium' })
+  return React.createElement('main', { style: { padding: 24 } },
+    React.createElement('h1', null, 'Teste do seletor'),
+    React.createElement('div', { className: 'assistant-input', style: { maxWidth: 500, marginTop: 24 } },
+      React.createElement(ModelPicker, { providers, ...selection, side: 'bottom', onConnect: () => {}, onValueChange: (value, provider, thinking) => setSelection({ value, provider, thinking }) })),
+    React.createElement('output', { 'aria-label': 'Seleção atual', style: { display: 'block', marginTop: 24 } }, JSON.stringify(selection)))
+}
+createRoot(document.getElementById('root')).render(React.createElement(TestPicker))
+</script>
+</body></html>

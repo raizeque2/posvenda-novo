@@ -1,0 +1,30 @@
+/* Cartões de importação (CartaoImport.jsx), no formato de anexos. */
+.imp-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; margin: 0 0 8px; padding: 0; list-style: none; }
+.imp-card { position: relative; display: flex; align-items: center; gap: 4px; min-width: 0; padding: 6px 8px 6px 6px; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: var(--bg2); box-shadow: 0 1px 2px rgba(15, 23, 42, .04); transition: border-color .2s, box-shadow .2s, transform .2s cubic-bezier(.23, 1, .32, 1); animation: imp-entra .2s cubic-bezier(.23, 1, .32, 1); }
+.imp-card:hover:not(.is-bloqueado) { border-color: color-mix(in srgb, var(--imp-cor) 40%, var(--border)); }
+.imp-card.is-drag { border-color: var(--imp-cor); border-style: dashed; box-shadow: 0 0 0 4px color-mix(in srgb, var(--imp-cor) 14%, transparent); transform: scale(1.01); }
+.imp-card.is-erro { border-color: color-mix(in srgb, var(--red) 45%, var(--border)); }
+html body .imp-card .imp-alvo { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 6px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; min-height: 0; }
+html body .imp-card .imp-alvo:disabled { cursor: default; }
+.imp-card .imp-alvo:focus-visible { outline: 2px solid var(--imp-cor); outline-offset: 1px; }
+.imp-icone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; flex: none; width: 42px; height: 42px; border-radius: 10px; color: var(--imp-cor); background: color-mix(in srgb, var(--imp-cor) 12%, transparent); }
+.imp-icone small { font-size: 8px; font-weight: 700; letter-spacing: .04em; line-height: 1; }
+.imp-texto { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.imp-texto strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; color: var(--text); }
+.imp-texto small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--text3); }
+.imp-card.is-erro .imp-texto small { color: var(--red); }
+.imp-card.is-ok .imp-texto small { color: var(--green); }
+.imp-enviar { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 8px; color: var(--text3); transition: color .15s, background .15s; }
+.imp-card:hover:not(.is-bloqueado) .imp-enviar { color: var(--imp-cor); background: color-mix(in srgb, var(--imp-cor) 10%, transparent); }
+html body .imp-card .imp-acao { display: grid; place-items: center; flex: none; width: 28px; height: 28px; min-width: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--text3); cursor: pointer; }
+html body .imp-card .imp-acao:hover { background: var(--bg3); color: var(--text); }
+.imp-progresso { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; overflow: hidden; background: var(--bg3); }
+.imp-progresso i { display: block; width: 40%; height: 100%; background: var(--imp-cor); animation: imp-carrega 1.2s ease-in-out infinite; }
+.imp-opcoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 4px 2px 16px; font-size: 13px; color: var(--text2); }
+.imp-opcoes label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.imp-opcoes input[type=checkbox] { accent-color: var(--honda); }
+.imp-opcoes a { font-size: 13px; }
+@keyframes imp-carrega { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes imp-entra { from { opacity: 0; transform: scale(.97); } }
+@media (prefers-reduced-motion: reduce) { .imp-card { animation: none; transition: none; } .imp-progresso i { animation: none; width: 100%; opacity: .6; } }
+@media (max-width: 600px) { html body .imp-card .imp-acao { width: 36px; height: 36px; } }

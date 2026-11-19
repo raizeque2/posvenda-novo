@@ -1,0 +1,114 @@
+@font-face { font-family: 'SF Pro Text'; src: url('/fonts/SFProText-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('/fonts/SFProText-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('/fonts/SFProText-Semibold.otf') format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('/fonts/SFProText-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Semibold.otf') format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Heavy.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('/fonts/SFProDisplay-Black.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('/fonts/SFProText-RegularItalic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+/**
+ * tokens.css — Design Tokens Pós-Venda (Pernambuco Motos)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * FONTE ÚNICA de cor, fonte, espaçamento e raio de todo o app.
+ * Nunca declarar um valor de cor/fonte/raio direto num componente — usar var(--token).
+ * Consumido por index.css (estilos globais/classes) e por DS.jsx (componentes React).
+ * Trocar uma cor/fonte no app inteiro = editar 1 linha, neste arquivo.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+:root {
+  /* Página */
+  --bg:      #f7f8fa;
+  --bg2:     #ffffff;
+  --bg3:     #f1f5f9;
+  --bg4:     #e2e8f0;
+
+  /* Bordas */
+  --border:  rgba(15,23,42,0.08);
+  --border2: rgba(15,23,42,0.15);
+
+  /* Texto */
+  --text:    #0f172a;
+  --text2:   #475569;
+  --text3:   #94a3b8;
+
+  /* Marca Honda */
+  --honda:   #cc0000;
+  --honda2:  #aa0000;
+  --honda-bg: rgba(204,0,0,0.07);
+
+  /* Accent principal = Honda Red */
+  --accent:  #cc0000;
+  --accent2: #aa0000;
+
+  /* Status */
+  --green:      #16a34a;
+  --green-bg:   rgba(22,163,74,0.08);
+  --amber:      #d97706;
+  --amber-bg:   rgba(217,119,6,0.08);
+  --red:        #e53e3e;
+  --red-bg:     rgba(229,62,62,0.08);
+  --red-critical: #e4032e; /* vermelho de alerta crítico (margem/obsolescência) — distinto de --red e --honda */
+  --purple:     #7c3aed;
+  --purple-bg:  rgba(124,58,237,0.08);
+  --blue:       #3b82f6;
+
+  /* Raios e sombra */
+  --radius:    4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --shadow:    0 1px 2px rgba(15,23,42,0.05), 0 2px 8px rgba(15,23,42,0.04);
+  --shadow-md: 0 4px 16px rgba(15,23,42,0.08);
+
+  /* ── Espaçamento — tokens globais ─────────────────────────────────────── */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-2xl:  48px;
+
+  /* Padding interno de cards e seções */
+  --card-padding:    16px 18px;
+  --card-padding-sm: 12px 14px;
+  --card-gap:        12px;
+
+  /* Altura padrão de linha nas tabelas */
+  --table-row-h: 40px;
+
+  /* ── Tipografia ────────────────────────────────────────────────────────── */
+  --font:         'SF Pro Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-heading: 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Escala — tamanhos de texto (padrão BI: denso, legível). 9px é o piso —
+     nada na interface web fica menor que isso (ilegível). lg2/3xl+ cobrem os
+     extremos maiores (títulos de login/registro, ícones grandes de estado
+     vazio). A micro-legenda do PDF impresso é a única exceção, fora daqui. */
+  --text-2xs:  9px;    /* piso da escala — micro-labels (KPI strip, popovers, setas de ordenação) */
+  --text-xs:   10px;   /* badges, labels uppercase, th */
+  --text-sm:   11px;   /* texto de apoio, notas */
+  --text-sm2:  12px;   /* texto secundário compacto */
+  --text-base: 12px;   /* corpo, células de tabela, valores */
+  --text-sm3:  13px;   /* títulos de card, corpo de formulário */
+  --text-md:   14px;   /* subtítulos de seção */
+  --text-md2:  15px;   /* títulos de modal, marca da sidebar */
+  --text-lg:   16px;   /* título de página */
+  --text-lg2:  17px;   /* KPI de destaque em tela pública (Snapshot) */
+  --text-xl:   18px;   /* KPI values */
+  --text-2xl:  20px;   /* KPI strip — valor em destaque */
+  --text-3xl:  22px;   /* título de tela de login/registro */
+  --text-4xl:  28px;   /* ícone grande (empty state, dropzone) */
+  --text-5xl:  32px;   /* ícone de erro em tela cheia */
+  --text-6xl:  40px;   /* ícone hero (Snapshot, Registro) */
+
+  /* Pesos */
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+}

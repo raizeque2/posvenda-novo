@@ -1,0 +1,5 @@
+.streaming-text{min-width:0}.streaming-text.is-revealing .chat-markdown{animation:stream-settle .25s ease-out}.streaming-cursor{display:inline-block;width:3px;height:14px;margin-left:4px;vertical-align:middle;background:var(--honda);border-radius:2px;animation:stream-cursor 1s ease-in-out infinite}
+@keyframes stream-settle{from{opacity:.5;filter:blur(2px)}to{opacity:1;filter:blur(0)}}@keyframes stream-cursor{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){.streaming-text.is-revealing .chat-markdown,.streaming-cursor{animation:none}}
+
+.streaming-skip{display:inline-flex;margin:7px 0 0 8px;padding:3px 5px;border:0;border-radius:5px;background:transparent;color:var(--text2);font:inherit;font-size:11px;cursor:pointer}.streaming-skip:hover{background:var(--bg3)}.streaming-skip:focus-visible{outline:2px solid var(--honda);outline-offset:2px}

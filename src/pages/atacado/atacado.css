@@ -1,0 +1,31 @@
+.atacado-grafico { height: 280px; padding: 12px 8px 8px; min-width: 0; }
+.atacado-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--bg3); }
+.atacado-seg button { min-height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--text2); font: 500 13px var(--font); cursor: pointer; white-space: nowrap; }
+.atacado-seg button.is-ativo { background: var(--bg2); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.atacado-seg button span { margin-left: 4px; color: var(--text3); font-size: 12px; }
+.atacado-seg button:focus-visible, .atacado-ordem select:focus-visible { outline: 2px solid var(--honda); outline-offset: 1px; }
+
+.atacado-vend { display: grid; gap: 12px; padding: 4px 16px 16px; }
+.atacado-vend-barra { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.atacado-ordem { display: inline-flex; align-items: center; gap: 8px; color: var(--text3); font-size: 13px; }
+.atacado-ordem select { min-height: 34px; padding: 0 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg2); color: var(--text); font: 500 13px var(--font); }
+.atacado-vend-lista { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.atacado-vend-lista li { display: grid; grid-template-columns: 22px 40px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 6px; border-radius: 12px; }
+.atacado-vend-lista li:hover { background: var(--bg3); }
+.atacado-vend-pos { color: var(--text3); font-size: 13px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+.atacado-vend-lista li:first-child .atacado-vend-pos { color: var(--honda); }
+.atacado-vend-avatar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--honda-bg); color: var(--honda); font-size: 13px; font-weight: 700; }
+.atacado-vend-info { display: grid; gap: 4px; min-width: 0; }
+.atacado-vend-info strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 500; }
+.atacado-vend-info small { color: var(--text3); font-size: 12px; }
+.atacado-vend-trilho { display: block; height: 5px; border-radius: 999px; background: var(--bg3); overflow: hidden; }
+.atacado-vend-trilho i { display: block; height: 100%; border-radius: inherit; background: var(--honda); }
+.atacado-vend-lista b { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.atacado-ver-todos { justify-self: center; min-height: 38px; }
+.atacado-vazio { margin: 0; padding: 24px 16px; color: var(--text3); text-align: center; font-size: 14px; }
+@media (max-width: 768px) {
+  .atacado-grafico { height: 230px; padding: 8px 2px 4px; }
+  .atacado-vend { padding: 4px 10px 12px; }
+  .atacado-vend-lista li { grid-template-columns: 18px 34px minmax(0, 1fr) auto; gap: 8px; }
+  .atacado-vend-avatar { width: 34px; height: 34px; font-size: 12px; }
+}

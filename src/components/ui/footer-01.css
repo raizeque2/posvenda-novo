@@ -1,0 +1,32 @@
+/* Equivalente às classes Tailwind do footer-01, com os tokens do tema do app. */
+.rodape { position: relative; overflow: hidden; margin-top: 48px; border-top: 1px solid var(--border); background: color-mix(in srgb, var(--bg2) 55%, transparent); }
+.rodape-container { width: 100%; max-width: 72rem; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
+.rodape-topo { display: grid; grid-template-columns: 1fr; gap: 48px; padding-top: 64px; }
+@media (min-width: 1024px) { .rodape-topo { grid-template-columns: 1.2fr 2fr; } }
+.rodape-marca { display: flex; flex-direction: column; gap: 16px; max-width: 24rem; }
+.rodape-logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: -.01em; color: var(--text); text-decoration: none; font-size: 16px; }
+.rodape-logo img { border-radius: 6px; }
+.rodape-marca p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text2); }
+.rodape-colunas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+@media (min-width: 640px) { .rodape-colunas { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.rodape-colunas h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--text); }
+.rodape-colunas ul { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.rodape-colunas a { font-size: 14px; color: var(--text2); text-decoration: none; transition: color .15s; }
+.rodape-colunas a:hover, .rodape-logo:hover { color: var(--text); }
+.rodape-base { display: flex; flex-direction: column-reverse; align-items: flex-start; justify-content: space-between; gap: 16px; margin-top: 64px; padding: 28px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--text3); }
+@media (min-width: 640px) { .rodape-base { flex-direction: row; align-items: center; } }
+.rodape-status { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.rodape-marca-grande { pointer-events: none; user-select: none; }
+.rodape-marca-grande p {
+  margin: 0 0 -.22em; text-align: center; line-height: 1; font-weight: 600; letter-spacing: -.05em; white-space: nowrap;
+  font-size: clamp(4rem, 15vw, 13rem);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--text) 15%, transparent), transparent);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+/* No tema claro 15% sumia no fundo branco: mais tinta, mesmo degradê. */
+:root:not([data-theme="dark"]) .rodape-marca-grande p { background-image: linear-gradient(to bottom, color-mix(in srgb, var(--text) 38%, transparent), color-mix(in srgb, var(--text) 4%, transparent)); }
+/* O <main> reserva 110px no fim para o assistente flutuante; com o rodapé lá embaixo esse
+   espaço virava uma faixa vazia depois dele. O rodapé já é o respiro. */
+@media (min-width: 769px) { html body .main:has(> .rodape) { padding-bottom: 0 !important; } }
+/* Celular: a bottom bar cobre o fim da página; o rodapé termina acima dela. */
+@media (max-width: 768px) { .rodape { margin-bottom: var(--bb-respiro, 96px); } .rodape-topo { padding-top: 40px; } }

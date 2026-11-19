@@ -1,0 +1,484 @@
+import { useMemo, useState, useEffect } from "react";
+import { STATUS_COLORS, STATUS_OPTIONS, fmtDate } from "../constants.js";
+import { StatusBadge } from "../ui/status-badge.jsx";
+const IconArrow = ({ className = "" }) => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M7 17L17 7M8 7h9v9" />
+  </svg>;
+const IconPlus = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>;
+const IconPlay = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>;
+const IconPause = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>;
+const IconStop = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>;
+function Panel({ children, className = "" }) {
+  return <div className={`consultant-panel rounded-2xl border glass-effect liquid-spread ${className}`} style={{ borderColor: "var(--border-line-soft)" }}>
+      {children}
+    </div>;
+}
+function StatCard({ label, value, sub, onOpen }) {
+  return <Panel className="consultant-kpi-card p-5 flex flex-col gap-6">
+      <div className="flex items-start justify-between">
+        <span className="text-sm font-semibold" style={{ color: "var(--text-dim)" }}>{label}</span>
+        <button type="button" onClick={onOpen} aria-label={`Abrir leads: ${label}`} className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:opacity-70" style={{ border: "1px solid var(--border-line)", color: "var(--text-dim)" }}>
+          <IconArrow />
+        </button>
+      </div>
+      <div className="flex flex-col gap-3">
+        <span className="text-4xl font-bold leading-none" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>{value}</span>
+        <span className="text-[11.5px] flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
+          <span className="w-4 h-4 rounded-sm inline-flex items-center justify-center" style={{ background: "#d719201a", color: "#d71920" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+          </span>
+          {sub}
+        </span>
+      </div>
+    </Panel>;
+}
+function StatCardHighlight({ label, value, sub, onOpen }) {
+  return <div className="consultant-kpi-card consultant-kpi-highlight rounded-2xl p-5 flex flex-col gap-6 glass-effect" style={{ background: "#d71920", color: "#ffffff", border: "none" }}>
+      <div className="flex items-start justify-between">
+        <span className="text-sm font-semibold opacity-90">{label}</span>
+        <button type="button" onClick={onOpen} aria-label={`Abrir leads: ${label}`} className="w-7 h-7 rounded-full flex items-center justify-center transition-colors" style={{ background: "#ffffff", color: "#d71920" }}>
+          <IconArrow />
+        </button>
+      </div>
+      <div className="flex flex-col gap-3">
+        <span className="text-4xl font-bold leading-none" style={{ fontFamily: "var(--font-display)" }}>{value}</span>
+        <span className="text-[11.5px] flex items-center gap-1.5 opacity-90">
+          <span className="w-4 h-4 rounded-sm inline-flex items-center justify-center" style={{ background: "#ffffff33" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+          </span>
+          {sub}
+        </span>
+      </div>
+    </div>;
+}
+function TimeTracker() {
+  const [seconds, setSeconds] = useState(0);
+  const [running, setRunning] = useState(false);
+  const [leadsFeitos, setLeadsFeitos] = useState(0);
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => setSeconds((s2) => s2 + 1), 1e3);
+    return () => clearInterval(id);
+  }, [running]);
+  const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+  const m = String(Math.floor(seconds % 3600 / 60)).padStart(2, "0");
+  const s = String(seconds % 60).padStart(2, "0");
+  const media = leadsFeitos > 0 ? Math.round(seconds / leadsFeitos) : 0;
+  const mm = String(Math.floor(media / 60)).padStart(2, "0");
+  const ss = String(media % 60).padStart(2, "0");
+  return <div className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden gap-4" style={{ background: "#141618", color: "#ffffff", minHeight: 220 }}>
+      <div
+    className="absolute inset-0 opacity-40"
+    style={{
+      backgroundImage: "radial-gradient(circle at 30% 20%, #d71920 0%, transparent 55%), radial-gradient(circle at 80% 90%, #22c55e33 0%, transparent 60%)"
+    }}
+    aria-hidden
+  />
+      <div className="relative flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full" style={{ background: running ? "#22c55e" : "#6b7280" }} />
+        <span className="text-sm font-semibold">Tempo de trabalho</span>
+      </div>
+      <div className="relative">
+        <div className="text-5xl font-bold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>{h}:{m}:{s}</div>
+        <div className="flex items-center gap-2 mt-4">
+          <button onClick={() => setRunning((r) => !r)} className="w-9 h-9 rounded-full flex items-center justify-center transition-transform hover:scale-105" style={{ background: "#ffffff", color: "#141618" }} aria-label={running ? "Pausar" : "Iniciar"}>
+            {running ? <IconPause /> : <IconPlay />}
+          </button>
+          <button onClick={() => {
+    setRunning(false);
+    setSeconds(0);
+  }} className="w-9 h-9 rounded-full flex items-center justify-center transition-transform hover:scale-105" style={{ background: "#d0524d", color: "#ffffff" }} aria-label="Parar">
+            <IconStop />
+          </button>
+        </div>
+      </div>
+      <div className="relative flex items-center justify-between gap-3 pt-3" style={{ borderTop: "1px solid #ffffff22" }}>
+        <label className="flex items-center gap-2 text-[11.5px] opacity-90 flex-shrink-0">
+          Leads feitos
+          <input
+    type="number"
+    min={0}
+    value={leadsFeitos}
+    onChange={(e) => setLeadsFeitos(Math.max(0, Number(e.target.value)))}
+    className="w-14 px-2 py-1 rounded-md text-center text-xs font-bold outline-none"
+    style={{ background: "#ffffff1a", border: "1px solid #ffffff33", color: "#ffffff" }}
+  />
+        </label>
+        <span className="text-[11.5px] font-semibold text-right" style={{ color: "#8fe3c0" }}>
+          {leadsFeitos > 0 ? `${mm}:${ss} / lead` : "\u2014 / lead"}
+        </span>
+      </div>
+    </div>;
+}
+const DAILY_GOAL = 10;
+function ProjectAnalytics({ leads }) {
+  const days = useMemo(() => {
+    const arr = [];
+    const labels = ["D", "S", "T", "Q", "Q", "S", "S"];
+    const now = /* @__PURE__ */ new Date();
+    const sunday = new Date(now);
+    sunday.setDate(now.getDate() - now.getDay());
+    const todayKey = now.toISOString().slice(0, 10);
+    const convertidos = leads.filter((l) => l.status === "Convertido");
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      const key = d.toISOString().slice(0, 10);
+      const count = convertidos.filter((l) => (l.atualizado_em || "").slice(0, 10) === key).length;
+      arr.push({ label: labels[d.getDay()], count, isToday: key === todayKey });
+    }
+    return arr;
+  }, [leads]);
+  const total = days.reduce((s, d) => s + d.count, 0);
+  const highlight = days.reduce((a, b) => b.count > a.count ? b : a, days[0]);
+  return <Panel className="p-5 flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Leads convertidos</h3>
+        <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: "var(--bg-elevated)", color: "var(--text-dim)" }}>
+          {total > 0 ? `${total} nos \xFAltimos 7 dias` : "\xDAltimos 7 dias"}
+        </span>
+      </div>
+      <div className="consultant-bar-chart flex items-end justify-between gap-3 h-40 relative pt-6">
+        {days.map((d, i) => {
+    const pct = Math.round(d.count / DAILY_GOAL * 100);
+    const h = 12 + Math.min(d.count, DAILY_GOAL) / DAILY_GOAL * 120;
+    const isMax = d === highlight && d.count > 0;
+    return <div key={i} className="flex-1 flex flex-col items-center gap-2 relative">
+              <span
+      className="absolute -top-1 text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap"
+      style={isMax ? { background: "#d71920", color: "#fff" } : { background: "var(--bg-elevated)", color: "var(--text-dim)" }}
+    >
+                {pct}%
+              </span>
+              <div
+      className="w-full rounded-full transition-all"
+      style={{
+        height: h,
+        maxWidth: 42,
+        background: isMax ? "var(--consultant-red)" : "repeating-linear-gradient(135deg, var(--chart-neutral) 0 6px, transparent 6px 10px), var(--bg-elevated)"
+      }}
+    />
+              <span className="text-xs font-semibold" style={{ color: d.isToday ? "var(--text-primary)" : "var(--text-muted)" }}>{d.label}</span>
+              <span className="text-[10.5px] font-bold -mt-1.5" style={{ color: "var(--text-muted)" }}>{d.count}</span>
+            </div>;
+  })}
+      </div>
+      <p className="text-[11px] -mt-2" style={{ color: "var(--text-muted)" }}>Meta diária: {DAILY_GOAL} conversões (100%)</p>
+      {total === 0 && <p className="text-xs text-center -mt-2" style={{ color: "var(--text-muted)" }}>Nenhum lead convertido nos últimos 7 dias.</p>}
+    </Panel>;
+}
+const REMINDERS_KEY = "am_reminders";
+function Reminders({ leads, onView }) {
+  const [items, setItems] = useState([]);
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(REMINDERS_KEY);
+      if (raw) setItems(JSON.parse(raw));
+    } catch {
+    }
+    setLoaded(true);
+  }, []);
+  useEffect(() => {
+    if (!loaded) return;
+    try {
+      localStorage.setItem(REMINDERS_KEY, JSON.stringify(items));
+    } catch {
+    }
+  }, [items, loaded]);
+  function addReminder() {
+    const text = draft.trim();
+    if (!text) {
+      setAdding(false);
+      return;
+    }
+    setItems((prev) => [{ id: `${Date.now()}`, text, done: false }, ...prev]);
+    setDraft("");
+    setAdding(false);
+  }
+  function toggle(id) {
+    setItems((prev) => prev.map((it) => it.id === id ? { ...it, done: !it.done } : it));
+  }
+  function remove(id) {
+    setItems((prev) => prev.filter((it) => it.id !== id));
+  }
+  const linkedReminders = useMemo(() => leads.filter((lead) => Boolean(lead.lembrete_em)).sort((a, b) => new Date(a.lembrete_em).getTime() - new Date(b.lembrete_em).getTime()), [leads]);
+  const pending = items.filter((i) => !i.done).length + linkedReminders.length;
+  return <Panel className="p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Lembretes</span>
+          <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>{pending > 0 ? `${pending} pendente${pending > 1 ? "s" : ""}` : "Tudo em dia"}</span>
+        </div>
+        <button
+    onClick={() => setAdding((a) => !a)}
+    className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-105"
+    style={{ background: "#d71920", color: "#ffffff" }}
+    title="Adicionar lembrete"
+  >
+          <IconPlus />
+        </button>
+      </div>
+
+      {adding && <div className="flex items-center gap-2">
+          <input
+    autoFocus
+    value={draft}
+    onChange={(e) => setDraft(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") addReminder();
+      if (e.key === "Escape") {
+        setAdding(false);
+        setDraft("");
+      }
+    }}
+    placeholder="Novo lembrete…"
+    className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
+    style={{ background: "var(--bg-input)", border: "1px solid var(--border-line)", color: "var(--text-primary)" }}
+  />
+          <button onClick={addReminder} className="px-3 py-2 rounded-lg text-xs font-semibold" style={{ background: "#d71920", color: "#fff" }}>
+            Adicionar
+          </button>
+        </div>}
+
+      <div className="flex flex-col gap-1 overflow-y-auto" style={{ maxHeight: 220 }}>
+        {linkedReminders.length > 0 && <span className="px-1 pb-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Vinculados a leads</span>}
+        {linkedReminders.map((lead) => {
+    const when = new Date(lead.lembrete_em);
+    const overdue = when.getTime() < Date.now();
+    return <button
+      type="button"
+      key={`lead-${lead.id}`}
+      onClick={() => onView("leads")}
+      className="flex min-h-12 items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--sidebar-hover)]"
+      title="Abrir lista de leads"
+    >
+              <span className="flex h-8 w-8 flex-none items-center justify-center rounded-lg" style={{ color: overdue ? "var(--color-red)" : "var(--color-blue)", background: overdue ? "color-mix(in srgb, var(--color-red) 11%, transparent)" : "color-mix(in srgb, var(--color-blue) 11%, transparent)" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
+              </span>
+              <span className="min-w-0 flex-1">
+                <strong className="block truncate text-[12.5px]" style={{ color: "var(--text-primary)" }}>{lead.nome}</strong>
+                <small className="block truncate text-[10.5px]" style={{ color: overdue ? "var(--color-red)" : "var(--text-muted)" }}>
+                  {lead.lembrete_texto || "Retornar contato"} · {when.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                </small>
+              </span>
+            </button>;
+  })}
+        {linkedReminders.length > 0 && items.length > 0 && <span className="px-1 pb-1 pt-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Lembretes pessoais</span>}
+        {items.length === 0 && linkedReminders.length === 0 && !adding && <p className="text-xs" style={{ color: "var(--text-muted)" }}>Nenhum lembrete. Clique em + para adicionar.</p>}
+        {items.map((it) => <div key={it.id} className="group flex items-center gap-2.5 py-1.5 px-1 rounded-lg transition-colors hover:bg-[var(--sidebar-hover)]">
+            <button
+    onClick={() => toggle(it.id)}
+    className="w-[18px] h-[18px] rounded-md flex items-center justify-center flex-shrink-0 transition-colors"
+    style={{ border: it.done ? "none" : "1.5px solid var(--border-line)", background: it.done ? "#d71920" : "transparent" }}
+    aria-label={it.done ? "Marcar como pendente" : "Marcar como conclu\xEDdo"}
+  >
+              {it.done && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>}
+            </button>
+            <span
+    className="flex-1 text-[13px] truncate"
+    style={{ color: it.done ? "var(--text-muted)" : "var(--text-primary)", textDecoration: it.done ? "line-through" : "none" }}
+  >
+              {it.text}
+            </span>
+            <button
+    onClick={() => remove(it.id)}
+    className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+    style={{ color: "var(--text-muted)" }}
+    aria-label="Remover lembrete"
+  >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+            </button>
+          </div>)}
+      </div>
+    </Panel>;
+}
+function ProjectsList({ leads, onView }) {
+  const recent = leads.slice(0, 5);
+  const colors = ["#d71920", "#4f7ac7", "#d9a441", "#8a6bc4", "#d0524d"];
+  return <Panel className="p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Leads recentes</h3>
+        <button onClick={() => onView("leads")} className="text-xs px-2.5 py-1 rounded-full font-semibold transition-colors hover:opacity-80" style={{ border: "1px solid var(--border-line)", color: "var(--text-dim)" }}>
+          Ver todos
+        </button>
+      </div>
+      <div className="flex flex-col gap-3">
+        {recent.length === 0 && <p className="text-xs" style={{ color: "var(--text-muted)" }}>Nenhum lead cadastrado.</p>}
+        {recent.map((l, i) => <div key={l.id} className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: `${colors[i % colors.length]}1a`, color: colors[i % colors.length] }}>
+              {(l.nome || "?").slice(0, 2).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{l.nome || "Sem nome"}</div>
+              <div className="text-[11px]" style={{ color: "var(--text-muted)" }}>{l.modelo || l.origem} · {fmtDate(l.data)}</div>
+            </div>
+            <StatusBadge status={l.status} size="sm" className="flex-none" />
+          </div>)}
+      </div>
+    </Panel>;
+}
+function StatusBreakdown({ leads, onView }) {
+  const total = leads.length;
+  const rows = STATUS_OPTIONS.map((status) => ({
+    status,
+    count: leads.filter((l) => l.status === status).length
+  }));
+  return <Panel className="p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Leads por status</h3>
+        <button onClick={() => onView("leads")} className="text-xs px-2.5 py-1 rounded-full font-semibold transition-colors hover:opacity-80" style={{ border: "1px solid var(--border-line)", color: "var(--text-dim)" }}>
+          Ver todos
+        </button>
+      </div>
+      <div className="flex flex-col gap-3.5">
+        {total === 0 && <p className="text-xs" style={{ color: "var(--text-muted)" }}>Nenhum lead cadastrado ainda.</p>}
+        {total > 0 && rows.map((r) => {
+    const sc = STATUS_COLORS[r.status] || { bg: "#eef0ea", text: "#4a4f55" };
+    const pct = total > 0 ? r.count / total * 100 : 0;
+    return <button
+      key={r.status}
+      onClick={() => onView("leads")}
+      className="flex flex-col gap-1.5 text-left group"
+    >
+              <div className="flex items-center justify-between">
+                <StatusBadge status={r.status} size="sm" />
+                <span className="text-[12.5px] font-bold" style={{ color: sc.text }}>{r.count}</span>
+              </div>
+              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: "var(--bg-elevated)" }}>
+                <div
+      className="h-full rounded-full transition-all group-hover:opacity-80"
+      style={{ width: `${pct}%`, background: sc.text, minWidth: r.count > 0 ? 6 : 0 }}
+    />
+              </div>
+            </button>;
+  })}
+      </div>
+    </Panel>;
+}
+function ProgressGauge({ pct, goal, done, onGoalChange }) {
+  const R = 90;
+  const CIRC = Math.PI * R;
+  const filled = pct / 100 * CIRC;
+  return <Panel className="p-5 flex flex-col gap-3">
+      <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Progresso da meta</h3>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="relative w-full max-w-[220px]">
+          <svg className="consultant-gauge" width="220" height="130" viewBox="0 0 220 130" preserveAspectRatio="xMidYMid meet">
+            <path d="M 20 115 A 90 90 0 0 1 200 115" fill="none" stroke="var(--chart-neutral)" strokeWidth="24" strokeLinecap="round" />
+            <defs>
+              <linearGradient id="gauge" x1="0" x2="1">
+                <stop offset="0%" stopColor="var(--consultant-green)" />
+                <stop offset="100%" stopColor="var(--consultant-red)" />
+              </linearGradient>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="4" height="8" fill="var(--chart-neutral)" />
+              </pattern>
+            </defs>
+            <path d="M 20 115 A 90 90 0 0 1 200 115" fill="none" stroke="url(#hatch)" strokeWidth="24" strokeLinecap="round" opacity="0.6" />
+            <path
+    d="M 20 115 A 90 90 0 0 1 200 115"
+    fill="none"
+    stroke="url(#gauge)"
+    strokeWidth="24"
+    strokeLinecap="round"
+    strokeDasharray={`${filled} ${CIRC}`}
+    style={{ transition: "stroke-dasharray 0.6s cubic-bezier(.4,0,.2,1)" }}
+  />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-4">
+            <div className="text-3xl font-bold" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>{Math.round(pct)}%</div>
+            <div className="text-[11px] font-semibold" style={{ color: "var(--text-muted)" }}>convertidos</div>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "var(--border-line-soft)" }}>
+        <div className="flex items-center gap-3 text-[11px]" style={{ color: "var(--text-muted)" }}>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full" style={{ background: "#d71920" }} />Convertidos {done}</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full" style={{ background: "var(--chart-neutral)" }} />Restante {Math.max(0, goal - done)}</span>
+        </div>
+        <div className="flex items-center gap-1 text-[11px]" style={{ color: "var(--text-muted)" }}>
+          Meta:
+          <input
+    type="number"
+    value={goal}
+    min={1}
+    onChange={(e) => onGoalChange(Number(e.target.value))}
+    className="w-14 px-2 py-1 rounded-md text-center text-xs font-bold outline-none"
+    style={{ background: "var(--bg-input)", border: "1px solid var(--border-line)", color: "var(--text-primary)" }}
+  />
+        </div>
+      </div>
+    </Panel>;
+}
+export function DashView({ leads, goal, onGoalChange, onView, onNewLead }) {
+  const now = /* @__PURE__ */ new Date();
+  const monthLeads = useMemo(() => leads.filter((l) => {
+    if (!l.data) return false;
+    const d = /* @__PURE__ */ new Date(l.data + "T12:00:00");
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }), [leads]);
+  const total = monthLeads.length;
+  const byStatus = useMemo(() => {
+    const m = {};
+    monthLeads.forEach((l) => {
+      m[l.status] = (m[l.status] || 0) + 1;
+    });
+    return m;
+  }, [monthLeads]);
+  const convertidos = byStatus["Convertido"] || 0;
+  const perdidos = byStatus["Perdido"] || 0;
+  const emAndamento = (byStatus["Em contato"] || 0) + (byStatus["Proposta enviada"] || 0);
+  const novos = byStatus["Novo"] || 0;
+  const pct = goal > 0 ? Math.min(100, convertidos / goal * 100) : 0;
+  const convertidosCompSemana = useMemo(() => {
+    const startOfWeek = (d) => {
+      const x = new Date(d);
+      x.setDate(x.getDate() - x.getDay());
+      x.setHours(0, 0, 0, 0);
+      return x;
+    };
+    const thisWeekStart = startOfWeek(now);
+    const lastWeekStart = new Date(thisWeekStart);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    let estaSemana = 0, semanaPassada = 0;
+    for (const l of leads) {
+      if (l.status !== "Convertido" || !l.atualizado_em) continue;
+      const d = new Date(l.atualizado_em);
+      if (d >= thisWeekStart) estaSemana++;
+      else if (d >= lastWeekStart && d < thisWeekStart) semanaPassada++;
+    }
+    return estaSemana - semanaPassada;
+  }, [leads, now]);
+  return <div className="consultant-view consultant-dashboard view-enter flex flex-col gap-5">
+      {
+    /* Stats row */
+  }
+      <div className="responsive-grid responsive-grid-4 grid gap-4" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+        <StatCardHighlight label="Total do mês" value={total} sub="Cadastros no mês atual" onOpen={() => onView("leads")} />
+        <StatCard label="Convertidos" value={convertidos} sub={convertidosCompSemana === 0 ? "Igual \xE0 semana passada" : `${Math.abs(convertidosCompSemana)} a ${convertidosCompSemana > 0 ? "mais" : "menos"} que semana passada`} onOpen={() => onView("leads")} />
+        <StatCard label="Em andamento" value={emAndamento} sub="Seguradoras e proteções veiculares" onOpen={() => onView("leads")} />
+        <StatCard label="Novos" value={novos} sub="Aguardando conversão no myHonda" onOpen={() => onView("leads")} />
+      </div>
+
+      {
+    /* Middle row */
+  }
+      <div className="responsive-grid responsive-grid-3 grid gap-4" style={{ gridTemplateColumns: "1.4fr 1fr 1fr" }}>
+        <ProjectAnalytics leads={leads} />
+        <Reminders leads={leads} onView={onView} />
+        <ProjectsList leads={leads} onView={onView} />
+      </div>
+
+      {
+    /* Bottom row */
+  }
+      <div className="responsive-grid responsive-grid-3 grid gap-4" style={{ gridTemplateColumns: "1.4fr 1fr 1fr" }}>
+        <StatusBreakdown leads={leads} onView={onView} />
+        <ProgressGauge pct={pct} goal={goal} done={convertidos} onGoalChange={onGoalChange} />
+        <TimeTracker />
+      </div>
+    </div>;
+}

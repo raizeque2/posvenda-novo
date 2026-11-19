@@ -1,0 +1,3 @@
+nome;loja;cargo;setor;salario_base;meta_varejo;meta_atacado;meta_web;meta_televendas;meta_mo;meta_pecas_os;competencia
+FUNCIONARIO EXEMPLO PECAS;ARA;VENDEDOR DE PECAS;VAREJO;2500,00;40000,00;;;;;;
+FUNCIONARIO EXEMPLO OFICINA;ARA;CONSULTOR TECNICO;OS;2800,00;;;;;30000,00;18000,00;

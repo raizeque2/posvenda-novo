@@ -1,0 +1,45 @@
+/* Estados de área: vazio, erro, sem permissão, sem dados, carregando. */
+.estado { position: relative; display: grid; place-items: center; min-height: 220px; padding: 28px 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg2); overflow: hidden; text-align: center; isolation: isolate; }
+.estado-compacto { min-height: 140px; padding: 20px 16px; }
+.estado-hachura { position: absolute; inset: 0; z-index: -1; background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--text) 5%, transparent) 0 1px, transparent 1px 9px); mask-image: radial-gradient(ellipse at center, transparent 22%, #000 78%); }
+.estado-conteudo { display: grid; justify-items: center; gap: 8px; max-width: 440px; animation: estado-entrar 320ms var(--motion-ease, ease) both; }
+.estado-icone { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg2); color: var(--text2); box-shadow: var(--shadow); }
+.estado strong { font-size: 15px; font-weight: 600; color: var(--text); }
+.estado p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text2); }
+.estado-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+.estado-acoes .btn { min-height: 40px; }
+.estado-erro .estado-icone { color: var(--red); background: var(--red-bg); border-color: color-mix(in srgb, var(--red) 25%, transparent); }
+.estado-bloqueado .estado-icone { color: var(--amber); background: var(--amber-bg); border-color: color-mix(in srgb, var(--amber) 25%, transparent); }
+.estado-pagina { display: grid; align-content: start; padding-top: 24px; }
+.estado-pagina .estado { min-height: min(60vh, 460px); }
+
+.estado-esqueleto { display: grid; gap: 16px; }
+.estado-esqueleto-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 16px; }
+.estado-esqueleto-card { display: grid; align-content: end; gap: 8px; height: 132px; padding: 16px; border-radius: 14px; }
+.estado-esqueleto-card i, .estado-esqueleto-card b { display: block; height: 10px; border-radius: 6px; background: color-mix(in srgb, var(--text) 8%, transparent); }
+.estado-esqueleto-card i { width: 40%; } .estado-esqueleto-card b { width: 65%; height: 18px; }
+.estado-esqueleto-painel { height: 260px; border-radius: 14px; }
+
+/* Página 404 */
+.pagina-404 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: stretch; min-height: min(78vh, 680px); padding-top: 24px; padding-bottom: 24px; }
+.p404-texto { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 24px 8px; animation: estado-entrar 360ms var(--motion-ease, ease) both; }
+.p404-codigo { width: fit-content; padding: 4px 10px; border-radius: 999px; background: var(--honda-bg); color: var(--honda); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.p404-texto h1 { margin: 0; font-family: var(--font-heading); font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -.03em; color: var(--text); }
+.p404-texto p { margin: 0; max-width: 46ch; font-size: 15px; line-height: 1.55; color: var(--text2); }
+.p404-texto code { padding: 1px 6px; border-radius: 6px; background: var(--bg3); font-size: 13px; word-break: break-all; }
+.p404-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.p404-acoes .btn { min-height: 44px; padding-inline: 18px; }
+.p404-atalhos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.p404-atalhos span { width: 100%; font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
+.p404-atalhos a { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--text); text-decoration: none; font-size: 14px; }
+.p404-atalhos a:hover { background: var(--bg3); }
+.p404-atalhos a:focus-visible, .p404-acoes :focus-visible { outline: 2px solid var(--honda); outline-offset: 2px; }
+.p404-arte { position: relative; display: grid; place-items: center; min-height: 280px; border-radius: 20px; overflow: hidden; isolation: isolate;
+  background: radial-gradient(60% 60% at 100% 0%, color-mix(in srgb, var(--honda) 70%, transparent), transparent 70%), #0e0e10; }
+.p404-arte::before { content: ''; position: absolute; inset: 0; z-index: -1; background-image: radial-gradient(rgba(255,255,255,.16) 1.2px, transparent 1.4px); background-size: 20px 20px; }
+.p404-arte::after { content: ''; position: absolute; top: -10%; right: -10%; width: 55%; aspect-ratio: 1; z-index: -1; background-image: radial-gradient(circle, color-mix(in srgb, var(--honda) 85%, #fff) 2.2px, transparent 2.6px); background-size: 22px 22px; mask-image: radial-gradient(circle at 100% 0%, #000 10%, transparent 65%); }
+.p404-arte b { font-family: var(--font-heading); font-size: clamp(88px, 12vw, 160px); font-weight: 800; letter-spacing: -.04em; color: #fff; animation: estado-entrar 520ms var(--motion-ease, ease) 80ms both; }
+@media (max-width: 860px) { .pagina-404 { grid-template-columns: 1fr; min-height: 0; } .p404-arte { min-height: 180px; order: -1; } }
+
+@keyframes estado-entrar { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .estado-conteudo, .p404-texto, .p404-arte b { animation: none; } }

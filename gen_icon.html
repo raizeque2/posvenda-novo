@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><body>
+<canvas id='c' width='180' height='180'></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = '#cc0000';
+ctx.fillRect(0,0,180,180);
+const img = new Image();
+img.onload = () => {
+  const pad = 25;
+  ctx.drawImage(img, pad, pad, 180-pad*2, 180-pad*2);
+  document.title = canvas.toDataURL('image/png');
+};
+img.src = 'data:image/png;base64,';
+</script>
+</body></html>
